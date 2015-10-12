@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-        final ArticleHandler db= new ArticleHandler(MainActivity.this);
+        final Articlehandler db= new Articlehandler(MainActivity.this);
         final TextView tv =(TextView) findViewById(R.id.textView);
 
 
