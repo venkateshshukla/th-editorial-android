@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/libs/libs.iml" filepath="$PROJECT_DIR$/libs/libs.iml" />
       <module fileurl="file://$PROJECT_DIR$/th-editorial-android.iml" filepath="$PROJECT_DIR$/th-editorial-android.iml" />
       <module fileurl="file://$PROJECT_DIR$/libs/volley/volley.iml" filepath="$PROJECT_DIR$/libs/volley/volley.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libs/volley/volley.iml" filepath="$PROJECT_DIR$/libs/volley/volley.iml" />
     </modules>
   </component>
 </project>
