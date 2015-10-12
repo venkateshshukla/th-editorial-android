@@ -1,8 +1,7 @@
 package in.vshukla.thed;
 
-/*
- * Created by neha on 12/10/15.
- */
+
+
 public class Article {
         String key;
         String author;
@@ -29,4 +28,4 @@ public class Article {
         }
     }
 
-}
+
