@@ -31,3 +31,6 @@ proguard/
 /.idea/libraries
 .DS_Store
 /captures
+/.idea/vcs.xml
+/app/app.iml
+/.idea/modules.xml
