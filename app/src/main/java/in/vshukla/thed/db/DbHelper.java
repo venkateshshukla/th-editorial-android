@@ -11,7 +11,7 @@ import in.vshukla.thed.db.DbContract.DbEntry;
  */
 public class DbHelper extends SQLiteOpenHelper {
 
-    private static final int DB_VERSION = 0;
+    private static final int DB_VERSION = 1;
     private static final String DB_NAME = "Opinions.db";
 
     private static final String SQL_CREATE_TABLE = String.format(
