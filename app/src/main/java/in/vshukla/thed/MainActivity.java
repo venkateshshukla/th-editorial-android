@@ -30,10 +30,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-        final Articlehandler db= new Articlehandler(MainActivity.this);
         final TextView tv =(TextView) findViewById(R.id.textView);
-
-
 
         String url = "http://th-opinion.appspot.com/api/list";
         Calendar c=Calendar.getInstance();
@@ -54,14 +51,15 @@ public class MainActivity extends AppCompatActivity {
                                 String key = p.getString("key");
                                 String author = p.getString("author");
                                 String title = p.getString("title");
-                                String Date = p.getString("print_date");
+                                String kind = p.getString("kind");
+                                String body = p.getString("body");
+                                String date = p.getString("print_date");
                                 ContentValues values = new ContentValues();
-                                db.addArticle(new Article(key, author, title));
 
                                 jsonResponse = "";
                                 jsonResponse += "Title" + title + "\n\n";
                                 jsonResponse += "Author" + author + "\n\n";
-                                jsonResponse += "Date" + Date + "\n\n";
+                                jsonResponse += "Date" + date + "\n\n";
 
                                 tv.setText(jsonResponse);
 
