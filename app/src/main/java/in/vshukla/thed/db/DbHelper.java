@@ -17,7 +17,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String SQL_CREATE_TABLE = String.format(
             "CREATE TABLE %s (" +
             "%s INTEGER PRIMARY KEY," +
-            "%s STRING," +
+            "%s STRING UNIQUE," +
             "%s STRING," +
             "%s STRING," +
             "%s STRING," +
@@ -26,8 +26,8 @@ public class DbHelper extends SQLiteOpenHelper {
             "%s STRING)",
             DbEntry.TABLE_NAME,
             DbEntry._ID,
-            DbEntry.COL_AUTHOR,
             DbEntry.COL_KEY,
+            DbEntry.COL_AUTHOR,
             DbEntry.COL_KIND,
             DbEntry.COL_PDATE,
             DbEntry.COL_TEXT,
