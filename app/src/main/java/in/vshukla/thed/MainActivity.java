@@ -1,6 +1,7 @@
 package in.vshukla.thed;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -12,6 +13,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import in.vshukla.thed.db.DbContract.DbEntry;
 import in.vshukla.thed.db.DbHelper;
 import in.vshukla.thed.ui.ArticleCursorAdapter;
@@ -19,7 +26,7 @@ import in.vshukla.thed.ui.ArticleCursorAdapter;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    private static final String[] PROJECTION = new String[] {
+    private static final String[] PROJECTION = new String[]{
             DbEntry._ID,
             DbEntry.COL_AUTHOR,
             DbEntry.COL_KIND,
@@ -32,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     private ListView listView;
     private ArticleCursorAdapter articleCursorAdapter;
     private Cursor articleCursor;
+
+    static final String PREF_TIMESTAMP = "latest_timestamp";
 
     private void setArticleDb(SQLiteDatabase db) {
         if (db == null) {
@@ -87,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.action_refresh:
                 Log.d(TAG, "action_refresh pressed.");
+                getLatestNews();
                 break;
             default:
                 Log.w(TAG, "Unknown menu item pressed.");
@@ -95,8 +105,37 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class GetDatabaseTask extends AsyncTask <Context, Void, SQLiteDatabase> {
+    private void getLatestNews() {
+        SharedPreferences prefs = this.getSharedPreferences(getString(R.string.pref_file_key), Context.MODE_PRIVATE);
+        long timestamp = prefs.getLong(PREF_TIMESTAMP, 0L);
+        Response.ErrorListener apiErrorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, error.toString());
+            }
+        };
+
+        Response.Listener<JSONObject> apiResponseListener = new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.i(TAG, "Got API response : " + response.toString());
+            }
+        };
+
+        Api api = new Api(this);
+        try {
+            api.getArticleList(timestamp, apiResponseListener, apiErrorListener);
+        } catch (JSONException e) {
+            Log.e(TAG, "Error fetching ArticleList.");
+            e.printStackTrace();
+        } finally {
+            Log.d(TAG, "Done with latest news.");
+        }
+    }
+
+    private class GetDatabaseTask extends AsyncTask<Context, Void, SQLiteDatabase> {
         private static final String TAG = "GetDatabaseTask";
+
         @Override
         protected SQLiteDatabase doInBackground(Context... params) {
             if (params.length != 0) {

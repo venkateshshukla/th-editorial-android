@@ -11,4 +11,6 @@
     <string name="sample_kind">Opinion</string>
     <string name="sample_title">Title of an imaginary Article</string>
 
+    <string name="pref_file_key">in.vshukla.thed.opinion_preferences</string>
+
 </resources>
