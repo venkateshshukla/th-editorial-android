@@ -1,6 +1,7 @@
 package in.vshukla.thed;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
@@ -9,14 +10,28 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 
+import in.vshukla.thed.db.DbContract.DbEntry;
 import in.vshukla.thed.db.DbHelper;
+import in.vshukla.thed.ui.ArticleCursorAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
+    private static final String[] PROJECTION = new String[] {
+            DbEntry._ID,
+            DbEntry.COL_AUTHOR,
+            DbEntry.COL_KIND,
+            DbEntry.COL_PDATE,
+            DbEntry.COL_TITLE
+    };
+    private static final String SORT_ORDER = DbEntry.COL_TIMESTAMP;
 
     private SQLiteDatabase articleDb;
+    private ListView listView;
+    private ArticleCursorAdapter articleCursorAdapter;
+    private Cursor articleCursor;
 
     private void setArticleDb(SQLiteDatabase db) {
         if (db == null) {
@@ -24,14 +39,32 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Log.d(TAG, "articleDb initialised.");
         }
-        this.articleDb = db;
+        articleDb = db;
+        articleCursor = articleDb.query(DbEntry.TABLE_NAME, PROJECTION, null, null, null, null, SORT_ORDER);
+        articleCursorAdapter = new ArticleCursorAdapter(this, articleCursor);
+        if (articleCursorAdapter == null) {
+            Log.e(TAG, "Received a null cursorAdapter.");
+        } else {
+            listView.setAdapter(articleCursorAdapter);
+            Log.d(TAG, "Set cursorAdapter to listView.");
+        }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        listView = (ListView) findViewById(R.id.list_parent);
         new GetDatabaseTask().execute(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (articleCursor != null) {
+            Log.d(TAG, "Closing cursor.");
+            articleCursor.close();
+        }
+        super.onDestroy();
     }
 
     @Override
