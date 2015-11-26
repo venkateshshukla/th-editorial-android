@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 public class ReaderActivity extends AppCompatActivity {
 
@@ -17,7 +18,20 @@ public class ReaderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_reader);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Intent intent = getIntent();
-        key = intent.getExtras().getString(getString(R.string.extras_key));
+        Bundle extras = intent.getExtras();
+        if (extras == null) {
+            Log.e(TAG, "No Bundle received. Exiting.");
+            Toast.makeText(this, "Error. Going back.", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+        key = extras.getString(getString(R.string.extras_key));
+        if (key == null) {
+            Log.e(TAG, "Received null key. Exiting.");
+            Toast.makeText(this, "Error. Going back.", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
         Log.d(TAG, "Received key : " + key);
     }
 }
