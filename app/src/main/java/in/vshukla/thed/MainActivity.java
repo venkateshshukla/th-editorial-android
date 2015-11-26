@@ -2,6 +2,7 @@ package in.vshukla.thed;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -84,12 +85,20 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d(TAG, "Clicked view at position : " + position);
                 ViewGroup vg = (ViewGroup) view;
+                String key = null;
                 for (int i = 0; i < vg.getChildCount(); i++) {
                     TextView child = (TextView) vg.getChildAt(i);
                     if (child.getId() == R.id.tv_list_key) {
-                        String key = child.getText().toString();
-                        Log.d(TAG, "Key : " + key);
+                        key = child.getText().toString();
                     }
+                }
+                if (key == null) {
+                    Log.e(TAG, "Could not find key tag. Abnormal adapter??");
+                } else {
+                    Log.d(TAG, "Key : " + key);
+                    Intent i = new Intent(MainActivity.this, ReaderActivity.class);
+                    i.putExtra(getString(R.string.extras_key), key);
+                    startActivity(i);
                 }
             }
         });
