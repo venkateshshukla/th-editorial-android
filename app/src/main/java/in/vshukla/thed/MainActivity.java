@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
             DbEntry.COL_PDATE,
             DbEntry.COL_TITLE
     };
-    private static final String SORT_ORDER = DbEntry.COL_TIMESTAMP;
+    private static final String SORT_ORDER = DbEntry.COL_TIMESTAMP + " DESC";
 
     private SQLiteDatabase articleDb;
     private ListView listView;
