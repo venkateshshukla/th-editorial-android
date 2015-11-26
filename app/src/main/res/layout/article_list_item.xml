@@ -43,4 +43,10 @@
         android:text="@string/sample_author"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
+    <TextView
+        android:id="@+id/tv_list_key"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible" />
+
 </RelativeLayout>
