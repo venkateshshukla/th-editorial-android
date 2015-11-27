@@ -12,6 +12,8 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import hugo.weaving.DebugLog;
+
 /**
  * Created by neha on 4/11/15.
  */
@@ -33,6 +35,7 @@ public class Api {
      * @param errorListener This callback function will be called in case of error.
      * @throws JSONException
      */
+    @DebugLog
     public void getArticleList(long timestamp,
                                Response.Listener<JSONObject> responseListener,
                                Response.ErrorListener errorListener)
@@ -51,6 +54,7 @@ public class Api {
      * @param errorListener This callback function will be called in case of error.
      * @throws JSONException
      */
+    @DebugLog
     public void getArticleList(Response.Listener<JSONObject> responseListener,
                                Response.ErrorListener errorListener) throws JSONException {
         Log.d(TAG, "Getting articles from past 7 days.");
@@ -65,6 +69,7 @@ public class Api {
      * @param errorListener This callback function will be called in case of error.
      * @throws JSONException
      */
+    @DebugLog
     public void getArticleText(String key,
                                Response.Listener<JSONObject> responseListener,
                                Response.ErrorListener errorListener) throws JSONException {

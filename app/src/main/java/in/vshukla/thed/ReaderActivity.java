@@ -10,9 +10,10 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import hugo.weaving.DebugLog;
 
 public class ReaderActivity extends AppCompatActivity {
 
@@ -46,6 +47,7 @@ public class ReaderActivity extends AppCompatActivity {
         getArticleBody();
     }
 
+    @DebugLog
     private void setArticleBody(String author, String body, String date, String kind, String title) {
         tvAuthor.setText(author);
         tvBody.setText(body);
@@ -54,9 +56,11 @@ public class ReaderActivity extends AppCompatActivity {
         tvTitle.setText(title);
     }
 
+    @DebugLog
     private void getArticleBody() {
-        final String  TAG = "Rdr.ApiListeners";
+        final String TAG = "Rdr.ApiListeners";
         Response.ErrorListener apiErrorListener = new Response.ErrorListener() {
+            @DebugLog
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, error.toString());
@@ -65,13 +69,13 @@ public class ReaderActivity extends AppCompatActivity {
         };
 
         Response.Listener<JSONObject> apiResponseListener = new Response.Listener<JSONObject>() {
+            @DebugLog
             @Override
             public void onResponse(JSONObject response) {
                 if (response == null) {
                     Log.e(TAG, "Null response to API call");
                     return;
                 }
-                Log.d(TAG, "Got JSON response");
                 try {
                     String author, body, date, kind, title;
                     author = response.getString("author");
@@ -93,11 +97,10 @@ public class ReaderActivity extends AppCompatActivity {
         } catch (JSONException e) {
             Log.e(TAG, "Error fetching ArticleList.");
             e.printStackTrace();
-        } finally {
-            Log.d(TAG, "Done with getting article text.");
         }
     }
 
+    @DebugLog
     private void initializeViews() {
         tvTitle = (TextView) findViewById(R.id.tv_title);
         tvDate = (TextView) findViewById(R.id.tv_date);

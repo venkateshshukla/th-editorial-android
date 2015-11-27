@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
+import hugo.weaving.DebugLog;
 import in.vshukla.thed.R;
 import in.vshukla.thed.db.DbContract.DbEntry;
 
@@ -17,11 +18,9 @@ import in.vshukla.thed.db.DbContract.DbEntry;
  */
 public class ArticleCursorAdapter extends CursorAdapter {
 
-    private static final String TAG = "ArticleCursorAdapter";
-
+    @DebugLog
     public ArticleCursorAdapter(Context context, Cursor c) {
         super(context, c, 0);
-        Log.d(TAG, "Created adapter");
     }
 
     @Override

@@ -28,6 +28,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import hugo.weaving.DebugLog;
+
 import in.vshukla.thed.db.DbContract.DbEntry;
 import in.vshukla.thed.db.DbHelper;
 import in.vshukla.thed.ui.ArticleCursorAdapter;
@@ -53,23 +55,25 @@ public class MainActivity extends AppCompatActivity {
 
     static final String PREF_TIMESTAMP = "latest_timestamp";
 
+    @DebugLog
     private void setArticleDb(SQLiteDatabase db) {
         if (db == null) {
             Log.w(TAG, "Setting articleDb to null.");
-        } else {
-            Log.d(TAG, "articleDb initialised.");
+            return;
         }
         articleDb = db;
         articleCursor = articleDb.query(DbEntry.TABLE_NAME, PROJECTION, null, null, null, null, SORT_ORDER);
         articleCursorAdapter = new ArticleCursorAdapter(this, articleCursor);
         if (articleCursorAdapter == null) {
             Log.e(TAG, "Received a null cursorAdapter.");
+            return;
         } else {
             listView.setAdapter(articleCursorAdapter);
             Log.d(TAG, "Set cursorAdapter to listView.");
         }
     }
 
+    @DebugLog
     private void setArticleDb() {
         setArticleDb(articleDb);
     }
@@ -144,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @DebugLog
     private void getLatestNews(final Context context) {
         long timestamp = prefs.getLong(PREF_TIMESTAMP, 0L);
         Log.d(TAG, "Latest timestamp available : " + timestamp);
@@ -173,7 +178,6 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, "Received num : " + String.valueOf(len));
                     Log.d(TAG, "Received r_ts : " + String.valueOf(r_ts));
                     Log.d(TAG, "Received u_ts : " + String.valueOf(u_ts));
-                    Log.d(TAG, "Received entries : " + entries.toString());
                     new FillDatabaseTask(context).execute(entries);
 
                 } catch (JSONException e) {
@@ -194,6 +198,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @DebugLog
     private void saveAndRefresh(Long timestamp) {
         if (timestamp == null)
             return;
@@ -209,6 +214,7 @@ public class MainActivity extends AppCompatActivity {
         private static final String TAG = "FillDatabaseTask";
         private Context context;
 
+        @DebugLog
         public FillDatabaseTask(Context context) {
             this.context = context;
         }
@@ -218,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
             super.onPreExecute();
         }
 
-
+        @DebugLog
         @Override
         protected Long doInBackground(JSONArray... params) {
             if (params == null || params.length == 0) {
@@ -251,8 +257,7 @@ public class MainActivity extends AppCompatActivity {
                     values.put(DbEntry.COL_TITLE, entry.getString(DbEntry.COL_TITLE));
                     values.put(DbEntry.COL_TIMESTAMP, entry.getString(DbEntry.COL_TIMESTAMP));
                     sqLiteDatabase.insertOrThrow(DbEntry.TABLE_NAME, null, values);
-                    Log.d(TAG, "Inserted successfully");
-                    Log.d(TAG, "Timestamp of article : " + ts);
+                    Log.d(TAG, "Inserted successfully article of Timestamp : " + ts);
 
                     if (ts > timestamp) {
                         timestamp = ts;
@@ -276,10 +281,10 @@ public class MainActivity extends AppCompatActivity {
             return (ets < timestamp) ? ets : timestamp;
         }
 
+        @DebugLog
         @Override
         protected void onPostExecute(Long timestamp) {
             super.onPostExecute(timestamp);
-            Log.d(TAG, "Latest timestamp : " + String.valueOf(timestamp));
             saveAndRefresh(timestamp);
         }
     }
@@ -287,10 +292,10 @@ public class MainActivity extends AppCompatActivity {
     private class GetDatabaseTask extends AsyncTask<Context, Void, SQLiteDatabase> {
         private static final String TAG = "GetDatabaseTask";
 
+        @DebugLog
         @Override
         protected SQLiteDatabase doInBackground(Context... params) {
             if (params.length != 0) {
-                Log.d(TAG, "Taking the first context passed. Acquiring readable database.");
                 SQLiteOpenHelper sqLiteOpenHelper = new DbHelper(params[0]);
                 return sqLiteOpenHelper.getReadableDatabase();
             } else {
@@ -299,6 +304,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        @DebugLog
         @Override
         protected void onPostExecute(SQLiteDatabase sqLiteDatabase) {
             setArticleDb(sqLiteDatabase);
