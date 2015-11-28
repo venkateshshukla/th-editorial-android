@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
 
     private SQLiteDatabase articleDb;
     private ListView listView;
-    private ArticleCursorAdapter articleCursorAdapter;
     private Cursor articleCursor;
     private SharedPreferences prefs;
 
@@ -63,14 +62,9 @@ public class MainActivity extends AppCompatActivity {
         }
         articleDb = db;
         articleCursor = articleDb.query(DbEntry.TABLE_NAME, PROJECTION, null, null, null, null, SORT_ORDER);
-        articleCursorAdapter = new ArticleCursorAdapter(this, articleCursor);
-        if (articleCursorAdapter == null) {
-            Log.e(TAG, "Received a null cursorAdapter.");
-            return;
-        } else {
-            listView.setAdapter(articleCursorAdapter);
-            Log.d(TAG, "Set cursorAdapter to listView.");
-        }
+        ArticleCursorAdapter articleCursorAdapter = new ArticleCursorAdapter(this, articleCursor);
+        listView.setAdapter(articleCursorAdapter);
+        Log.d(TAG, "Set cursorAdapter to listView.");
     }
 
     @DebugLog
@@ -108,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
         });
         new GetDatabaseTask().execute(this);
         prefs = getSharedPreferences(getString(R.string.pref_file_key), Context.MODE_PRIVATE);
+        getLatestNews(this);
     }
 
     @Override
@@ -144,7 +139,6 @@ public class MainActivity extends AppCompatActivity {
             default:
                 Log.w(TAG, "Unknown menu item pressed.");
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -205,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "Saving timestamp : " + timestamp);
         SharedPreferences.Editor spEditor = prefs.edit();
         spEditor.putLong(PREF_TIMESTAMP, timestamp);
-        spEditor.commit();
+        spEditor.apply();
         setArticleDb();
     }
 
