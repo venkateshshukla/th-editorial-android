@@ -15,16 +15,21 @@ import org.json.JSONObject;
 import hugo.weaving.DebugLog;
 
 /**
+ *
  * Created by neha on 4/11/15.
  */
 public class Api {
 
     public static final String TAG = "API";
-    private static final String BASEURL = "http://example.com" + "/api";
 
     private RequestQueue requestQueue;
 
+    private static final String PROP_BASEURL = "server.baseurl";
+
+    private Context context;
+
     public Api(Context context) {
+        this.context = context;
         this.requestQueue = Volley.newRequestQueue(context);
     }
 
@@ -41,7 +46,7 @@ public class Api {
                                Response.ErrorListener errorListener)
             throws JSONException {
         Log.d(TAG, "Getting articles after timestamp : " + String.valueOf(timestamp));
-        String url = BASEURL + "/list";
+        String url = AppConfigs.getProperty(PROP_BASEURL,context) + "/list";
         JSONObject params = new JSONObject();
         params.put("timestamp", timestamp);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, params, responseListener, errorListener);
@@ -74,7 +79,7 @@ public class Api {
                                Response.Listener<JSONObject> responseListener,
                                Response.ErrorListener errorListener) throws JSONException {
         Log.d(TAG, "Getting articles associated with key : " + key);
-        String url = BASEURL + "/news";
+        String url = AppConfigs.getProperty(PROP_BASEURL, context) + "/news";
         JSONObject params = new JSONObject();
         params.put("key", key);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, params, responseListener, errorListener);
