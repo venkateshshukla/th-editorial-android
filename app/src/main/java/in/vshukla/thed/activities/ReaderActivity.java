@@ -88,7 +88,7 @@ public class ReaderActivity extends AppCompatActivity {
                     finish();
                     return;
                 }
-                setArticleBody(articleRest.getAuthor(), articleRest.getBody(), articleRest.getPrint_date(), articleRest.getKind(), articleRest.getTitle());
+                setArticleBody(articleRest.getAuthor(), articleRest.getSnippet(), articleRest.getPrint_date(), articleRest.getKind(), articleRest.getTitle());
             }
 
             @Override

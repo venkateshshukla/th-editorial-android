@@ -134,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.i(TAG, articleListRest.toString());
 
                 if (articleListRest.getNum() == 0 || articleListRest.getEntries().size() == 0) {
+                    Toast.makeText(context, "No new articles.", Toast.LENGTH_SHORT).show();
                     Log.w(TAG, "Recieved no articles");
                     return;
                 }

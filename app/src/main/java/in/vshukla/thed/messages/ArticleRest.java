@@ -5,7 +5,7 @@ public class ArticleRest {
     private String key;
     private String author;
     private String title;
-    private String body;
+    private String snippet;
     private String kind;
     private String print_date;
     private Long timestamp;
@@ -34,12 +34,12 @@ public class ArticleRest {
         this.title = title;
     }
 
-    public String getBody() {
-        return body;
+    public String getSnippet() {
+        return snippet;
     }
 
-    public void setBody(String body) {
-        this.body = body;
+    public void setSnippet(String snippet) {
+        this.snippet = snippet;
     }
 
     public String getKind() {
@@ -72,9 +72,9 @@ public class ArticleRest {
                 "key='" + key + '\'' +
                 ", author='" + author + '\'' +
                 ", title='" + title + '\'' +
-                ", body='" + body + '\'' +
+                ", snippet='" + snippet + '\'' +
                 ", kind='" + kind + '\'' +
-                ", date='" + print_date + '\'' +
+                ", print_date='" + print_date + '\'' +
                 ", timestamp=" + timestamp +
                 '}';
     }

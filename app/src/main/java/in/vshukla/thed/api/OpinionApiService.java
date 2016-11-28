@@ -17,6 +17,6 @@ public interface OpinionApiService {
     Call<ArticleListRest> getArticleList(@Query("timestamp") long timestamp);
 
     @GET("news")
-    Call<ArticleRest> getArticle(@Query("id") String id);
+    Call<ArticleRest> getArticle(@Query("key") String key);
 
 }
