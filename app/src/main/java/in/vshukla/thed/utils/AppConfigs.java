@@ -1,4 +1,4 @@
-package in.vshukla.thed;
+package in.vshukla.thed.utils;
 
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -9,6 +9,8 @@ import java.io.InputStream;
 import java.util.Properties;
 
 /**
+ * This class is an interface to the build configs properties class.
+ *
  * Created by venkatesh on 24/11/16.
  */
 

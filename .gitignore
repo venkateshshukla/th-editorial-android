@@ -34,3 +34,5 @@ proguard/
 /.idea/vcs.xml
 /app/app.iml
 /.idea/modules.xml
+
+google-services.json

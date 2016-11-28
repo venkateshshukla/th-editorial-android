@@ -8,8 +8,8 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".activities.MainActivity">
 
-    <ListView
-        android:id="@+id/list_parent"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/list_recycle_parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"

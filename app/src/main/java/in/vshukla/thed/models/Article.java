@@ -1,22 +1,38 @@
-package in.vshukla.thed;
+package in.vshukla.thed.models;
 
-public class Article {
+import io.realm.RealmObject;
+import io.realm.annotations.Index;
+import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.Required;
 
+/**
+ * An article entity
+ *
+ * Created by venkatesh on 28/11/16.
+ */
+
+public class Article extends RealmObject {
+
+    @Required
+    @PrimaryKey
     private String key;
-    private String author;
+
+    @Index
+    private String  author;
+
+    @Required
+    @Index
     private String title;
+
     private String body;
+
+    @Required
     private String kind;
+
+    @Required
     private String date;
 
-    public Article(String key, String author, String title, String body, String kind, String date) {
-        this.key = key;
-        this.author = author;
-        this.title = title;
-        this.body = body;
-        this.kind = kind;
-        this.date = date;
-    }
+    private long timestamp;
 
     public String getKey() {
         return key;
@@ -65,6 +81,12 @@ public class Article {
     public void setDate(String date) {
         this.date = date;
     }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
 }
-
-
