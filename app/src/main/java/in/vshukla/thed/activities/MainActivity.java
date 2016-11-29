@@ -1,38 +1,38 @@
 package in.vshukla.thed.activities;
 
+import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import java.util.List;
 
 import hugo.weaving.DebugLog;
-import in.vshukla.thed.utils.AppConfigs;
-import in.vshukla.thed.utils.AppConstants;
-import in.vshukla.thed.tasks.PersistAsyncTask;
 import in.vshukla.thed.R;
 import in.vshukla.thed.adapters.ArticleListAdapter;
 import in.vshukla.thed.api.OpinionApiService;
 import in.vshukla.thed.messages.ArticleListRest;
 import in.vshukla.thed.messages.ArticleRest;
 import in.vshukla.thed.models.Article;
+import in.vshukla.thed.tasks.PersistAsyncTask;
+import in.vshukla.thed.utils.AppConstants;
 import io.realm.Realm;
+import io.realm.Sort;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity {
+import static in.vshukla.thed.models.Article.COL_TIMESTAMP;
+
+public class MainActivity extends Activity {
 
     private static final String TAG = "MainActivity";
     private static final String PREF_TIMESTAMP = "latest_timestamp";
@@ -51,8 +51,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_recycler_list);
 
         // Initialize RetroFit APIs to fetch a list of entries.
-        String baseUrl = AppConfigs.getProperty(AppConstants.SERVER_BASEURL, this);
-        retrofit = new Retrofit.Builder().baseUrl(baseUrl).addConverterFactory(GsonConverterFactory.create()).build();
+        retrofit = new Retrofit.Builder().baseUrl(AppConstants.SERVER_BASEURL).addConverterFactory(GsonConverterFactory.create()).build();
         apiService = retrofit.create(OpinionApiService.class);
 
         // Get realm instance.
@@ -73,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
     @DebugLog
     private void setUpRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new ArticleListAdapter(this, realm.where(Article.class).findAllAsync(), true));
+        recyclerView.setAdapter(new ArticleListAdapter(this, realm.where(Article.class).findAllSortedAsync(COL_TIMESTAMP, Sort.DESCENDING), true));
         recyclerView.setHasFixedSize(true);
     }
 

@@ -4,10 +4,10 @@
     <string name="action_settings">Settings</string>
     <string name="action_refresh">Refresh</string>
 
-    <string name="sample_date">25-11-2015 11:00 AM</string>
+    <string name="sample_date">1h</string>
     <string name="sample_author">N B</string>
     <string name="sample_kind">Opinion</string>
-    <string name="sample_title">Title of an imaginary Article</string>
+    <string name="sample_title">A very long title of an imaginary article. This title is huge.</string>
     <string name="sample_body">Sample body of an imaginary Article.\nLine 1 of an imaginary Article.\nLine 2 of an imaginary Article.\n.\n.\n.\n.\nLine n of an imaginary Article</string>
 
     <string name="pref_file_key">in.vshukla.thed.opinion_preferences</string>

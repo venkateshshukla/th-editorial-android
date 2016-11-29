@@ -3,8 +3,6 @@ package in.vshukla.thed.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +15,8 @@ import in.vshukla.thed.activities.ReaderActivity;
 import in.vshukla.thed.models.Article;
 import io.realm.OrderedRealmCollection;
 import io.realm.RealmRecyclerViewAdapter;
+
+import static in.vshukla.thed.utils.AppUtils.getDateDiffString;
 
 /**
  * Adapter for the article list.
@@ -60,7 +60,7 @@ public class ArticleListAdapter extends RealmRecyclerViewAdapter<Article, Articl
                 context.startActivity(intent, bundle);
             }
         });
-        return new ArticleViewHolder(itemView, context);
+        return new ArticleViewHolder(itemView);
     }
 
     @Override
@@ -71,16 +71,15 @@ public class ArticleListAdapter extends RealmRecyclerViewAdapter<Article, Articl
         }
         Article article = articles.get(position);
         holder.tvAuthor.setText(article.getAuthor());
-        holder.tvDate.setText(article.getDate());
         holder.tvKind.setText(article.getKind());
         holder.tvKey.setText(article.getKey());
         holder.tvTitle.setText(article.getTitle());
+        holder.tvDate.setText(getDateDiffString(article.getDate()));
     }
 
     static class ArticleViewHolder extends RecyclerView.ViewHolder {
         TextView tvDate, tvKind, tvTitle, tvAuthor, tvKey;
-        Context context;
-        ArticleViewHolder(View itemView, Context context) {
+        ArticleViewHolder(View itemView) {
             super(itemView);
             tvAuthor = (TextView) itemView.findViewById(R.id.tv_list_author);
             tvDate = (TextView) itemView.findViewById(R.id.tv_list_date);

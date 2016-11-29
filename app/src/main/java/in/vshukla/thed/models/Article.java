@@ -13,6 +13,14 @@ import io.realm.annotations.Required;
 
 public class Article extends RealmObject {
 
+    public static final String COL_KEY = "key";
+    public static final String COL_AUTHOR = "author";
+    public static final String COL_TITLE = "title";
+    public static final String COL_BODY = "body";
+    public static final String COL_KIND = "kind";
+    public static final String COL_DATE = "date";
+    public static final String COL_TIMESTAMP = "timestamp";
+
     @Required
     @PrimaryKey
     private String key;

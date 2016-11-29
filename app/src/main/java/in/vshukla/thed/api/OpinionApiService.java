@@ -1,7 +1,7 @@
 package in.vshukla.thed.api;
 
-import in.vshukla.thed.messages.ArticleRest;
 import in.vshukla.thed.messages.ArticleListRest;
+import in.vshukla.thed.messages.ArticleRest;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
