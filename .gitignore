@@ -36,3 +36,5 @@ proguard/
 /.idea/modules.xml
 
 google-services.json
+.idea/
+*.iml
