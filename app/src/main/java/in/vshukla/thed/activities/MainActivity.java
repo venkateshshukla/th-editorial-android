@@ -76,6 +76,7 @@ public class MainActivity extends Activity {
 
         // Initialize firebase database
         firebaseDatabase = FirebaseDatabase.getInstance();
+        firebaseDatabase.setPersistenceEnabled(true);
         firebaseDatabaseReference = firebaseDatabase.getReference();
 
         // Populate the recycler list view
