@@ -15,5 +15,6 @@ public interface AppConstants {
     static final long MILLIS_IN_DAY = MILLIS_IN_HOUR * 24;
     static final long MILLIS_IN_WEEK = MILLIS_IN_DAY * 7;
     static final String EMPTY_STR = "";
+    static final String REALM_DIR = ".opinion";
 
 }

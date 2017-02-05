@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,6 +23,7 @@ import in.vshukla.thed.messages.ArticleRest;
 import in.vshukla.thed.models.Article;
 import in.vshukla.thed.tasks.PersistAsyncTask;
 import in.vshukla.thed.utils.AppConstants;
+import in.vshukla.thed.utils.AppUtils;
 import io.realm.Realm;
 import io.realm.Sort;
 import retrofit2.Call;
@@ -55,7 +57,6 @@ public class MainActivity extends Activity {
         apiService = retrofit.create(OpinionApiService.class);
 
         // Get realm instance.
-        Realm.init(getApplicationContext());
         realm = Realm.getDefaultInstance();
 
         // Initialise the shared preferences

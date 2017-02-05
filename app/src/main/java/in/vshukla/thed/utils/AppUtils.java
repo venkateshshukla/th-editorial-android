@@ -1,5 +1,6 @@
 package in.vshukla.thed.utils;
 
+import android.os.Environment;
 import android.util.Log;
 
 import java.text.DateFormat;
@@ -94,5 +95,32 @@ public class AppUtils {
             Log.w(TAG, "Unable to parse the date string : " + dateStr);
         }
         return date;
+    }
+
+    /**
+     * Checks if external storage is available for read and write
+     *
+     * @return
+     */
+    public static boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Checks if external storage is available to at least read
+     *
+     * @return
+     */
+    public static boolean isExternalStorageReadable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state) ||
+                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+            return true;
+        }
+        return false;
     }
 }
