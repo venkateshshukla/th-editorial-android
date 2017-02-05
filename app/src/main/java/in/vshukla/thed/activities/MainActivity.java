@@ -2,87 +2,139 @@ package in.vshukla.thed.activities;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
+import android.widget.TextView;
 
-import java.util.List;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import hugo.weaving.DebugLog;
 import in.vshukla.thed.R;
-import in.vshukla.thed.adapters.ArticleListAdapter;
-import in.vshukla.thed.api.OpinionApiService;
-import in.vshukla.thed.messages.ArticleListRest;
-import in.vshukla.thed.messages.ArticleRest;
 import in.vshukla.thed.models.Article;
-import in.vshukla.thed.tasks.PersistAsyncTask;
 import in.vshukla.thed.utils.AppConstants;
-import in.vshukla.thed.utils.AppUtils;
-import io.realm.Realm;
-import io.realm.Sort;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
-import static in.vshukla.thed.models.Article.COL_TIMESTAMP;
+import static in.vshukla.thed.utils.AppUtils.getDateDiffString;
 
 public class MainActivity extends Activity {
 
     private static final String TAG = "MainActivity";
-    private static final String PREF_TIMESTAMP = "latest_timestamp";
 
     private RecyclerView recyclerView;
+    private LinearLayoutManager linearLayoutManager;
+
     private SharedPreferences prefs;
-    private OpinionApiService apiService;
-    private Realm realm;
-    private Retrofit retrofit;
-    private PersistAsyncTask persistTask;
+
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference firebaseDatabaseReference;
+    private FirebaseRecyclerAdapter<Article, ArticleViewHolder> firebaseAdapter;
+    private ChildEventListener childEventListener;
+
+    static class ArticleViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        TextView tvDate, tvKind, tvTitle, tvAuthor, tvKey;
+        Article article;
+        Context context;
+
+        ArticleViewHolder(View itemView) {
+            super(itemView);
+            tvAuthor = (TextView) itemView.findViewById(R.id.tv_list_author);
+            tvDate = (TextView) itemView.findViewById(R.id.tv_list_date);
+            tvKind = (TextView) itemView.findViewById(R.id.tv_list_kind);
+            tvKey = (TextView) itemView.findViewById(R.id.tv_list_key);
+            tvTitle = (TextView) itemView.findViewById(R.id.tv_list_title);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            Intent readerActivityIntent = new Intent(context, ReaderActivity.class);
+            Bundle extras = new Bundle();
+            extras.putSerializable(AppConstants.EXTRAS_ARTICLE, article);
+            readerActivityIntent.putExtras(extras);
+            context.startActivity(readerActivityIntent);
+        }
+    }
 
     @Override
+    @DebugLog
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recycler_list);
 
-        // Initialize RetroFit APIs to fetch a list of entries.
-        retrofit = new Retrofit.Builder().baseUrl(AppConstants.SERVER_BASEURL).addConverterFactory(GsonConverterFactory.create()).build();
-        apiService = retrofit.create(OpinionApiService.class);
-
-        // Get realm instance.
-        realm = Realm.getDefaultInstance();
-
         // Initialise the shared preferences
         prefs = getSharedPreferences(getString(R.string.pref_file_key), Context.MODE_PRIVATE);
+
+        // Initialize firebase database
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        firebaseDatabase.setPersistenceEnabled(true);
+        firebaseDatabaseReference = firebaseDatabase.getReference();
+        firebaseDatabaseReference.keepSynced(true);
 
         // Populate the recycler list view
         recyclerView = (RecyclerView) findViewById(R.id.list_recycle_parent);
         setUpRecyclerView();
 
-        // Get the latest news
-        getLatestNews(this);
     }
 
     @DebugLog
     private void setUpRecyclerView() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new ArticleListAdapter(this, realm.where(Article.class).findAllSortedAsync(COL_TIMESTAMP, Sort.DESCENDING), true));
-        recyclerView.setHasFixedSize(true);
+        firebaseAdapter = new FirebaseRecyclerAdapter<Article, ArticleViewHolder>(
+                Article.class,
+                R.layout.article_list_item,
+                ArticleViewHolder.class,
+                firebaseDatabaseReference.child(AppConstants.DB_FEED_NEWSFEED)
+        ) {
+            @DebugLog
+            @Override
+            protected void populateViewHolder(ArticleViewHolder holder, Article article, int position) {
+                holder.tvAuthor.setText(article.getAuthor());
+                holder.tvKind.setText(article.getCategory());
+                holder.tvKey.setText(article.getId());
+                holder.tvTitle.setText(article.getTitle());
+                holder.tvDate.setText(getDateDiffString(article.getPublishedDate()));
+                holder.article = article;
+                holder.context = getApplicationContext();
+            }
+        };
+
+        firebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            @DebugLog
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                int articleCount = firebaseAdapter.getItemCount();
+                int lastVisiblePosition = linearLayoutManager.findLastCompletelyVisibleItemPosition();
+                // Scroll to newly added message
+                if (lastVisiblePosition == -1 || (positionStart >= (articleCount - 1) && lastVisiblePosition == (positionStart - 1))) {
+                    recyclerView.scrollToPosition(positionStart);
+                }
+            }
+        });
+
+        recyclerView.setAdapter(firebaseAdapter);
+
+        linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+        //recyclerView.setHasFixedSize(true);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (realm != null) {
-            realm.close();
-        }
+        firebaseAdapter.cleanup();
     }
 
     @Override
@@ -105,79 +157,10 @@ public class MainActivity extends Activity {
                 break;
             case R.id.action_refresh:
                 Log.d(TAG, "action_refresh pressed.");
-                getLatestNews(this);
                 break;
             default:
                 Log.w(TAG, "Unknown menu item pressed.");
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @DebugLog
-    private void getLatestNews(final Context context) {
-        long timestamp = prefs.getLong(PREF_TIMESTAMP, 0L);
-        Log.d(TAG, "Latest timestamp available : " + timestamp);
-
-        Callback<ArticleListRest> callback = new Callback<ArticleListRest>() {
-            @Override
-            public void onResponse(Call<ArticleListRest> call, Response<ArticleListRest> response) {
-                if (response == null) {
-                    Log.e(TAG, "Null response to API call");
-                    return;
-                }
-
-                ArticleListRest articleListRest = response.body();
-                if (articleListRest == null) {
-                    Log.e(TAG, "Null response body");
-                    return;
-                }
-                Log.i(TAG, articleListRest.toString());
-
-                if (articleListRest.getNum() == 0 || articleListRest.getEntries().size() == 0) {
-                    Toast.makeText(context, "No new articles.", Toast.LENGTH_SHORT).show();
-                    Log.w(TAG, "Recieved no articles");
-                    return;
-                }
-
-                Toast.makeText(context, "Received " + articleListRest.getNum() + " articles.", Toast.LENGTH_SHORT).show();
-                persistTask = new PersistAsyncTask(getApplicationContext());
-                persistTask.execute(articleListRest.getEntries().toArray(new ArticleRest[] {}));
-
-                saveLatestTimestamp(getLatestTimestamp(articleListRest.getEntries()));
-            }
-
-            @Override
-            public void onFailure(Call<ArticleListRest> call, Throwable t) {
-                Log.e(TAG, t.getMessage());
-                Toast.makeText(context, "Error getting Articles.", Toast.LENGTH_SHORT).show();
-            }
-        };
-
-        Call<ArticleListRest> articleListCall = apiService.getArticleList(timestamp);
-        articleListCall.enqueue(callback);
-    }
-
-    @DebugLog
-    private Long getLatestTimestamp(List<ArticleRest> articleRestList) {
-        Long latest = 0L;
-        if (articleRestList == null || articleRestList.isEmpty()) {
-            return latest;
-        }
-        for (ArticleRest rest : articleRestList) {
-            if (rest.getTimestamp() > latest) {
-                latest = rest.getTimestamp();
-            }
-        }
-        return latest;
-    }
-
-    @DebugLog
-    private void saveLatestTimestamp(Long timestamp) {
-        if (timestamp == null)
-            return;
-        Log.d(TAG, "Saving timestamp : " + timestamp);
-        SharedPreferences.Editor spEditor = prefs.edit();
-        spEditor.putLong(PREF_TIMESTAMP, timestamp);
-        spEditor.apply();
     }
 }

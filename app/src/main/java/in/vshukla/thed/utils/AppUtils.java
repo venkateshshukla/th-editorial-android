@@ -57,6 +57,16 @@ public class AppUtils {
             return EMPTY_STR;
         }
 
+        return getDateDiffString(date);
+    }
+
+    public static String getDateDiffString(Long timestamp) {
+        Date date = new Date(timestamp);
+        return getDateDiffString(date);
+    }
+
+    private static String getDateDiffString(Date date) {
+
         Date now = new Date();
         long diff = now.getTime() - date.getTime();
         if (diff > MILLIS_IN_WEEK) {

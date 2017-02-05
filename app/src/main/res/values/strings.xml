@@ -12,6 +12,6 @@
 
     <string name="pref_file_key">in.vshukla.thed.opinion_preferences</string>
 
-    <string name="extras_key">extras_key</string>
+    <string name="extras_article">extras_article</string>
 
 </resources>
