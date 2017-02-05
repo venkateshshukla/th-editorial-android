@@ -75,10 +75,11 @@ public class MainActivity extends Activity {
         prefs = getSharedPreferences(getString(R.string.pref_file_key), Context.MODE_PRIVATE);
 
         // Initialize firebase database
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        firebaseDatabase.setPersistenceEnabled(true);
-        firebaseDatabaseReference = firebaseDatabase.getReference();
-        firebaseDatabaseReference.keepSynced(true);
+        if (firebaseDatabase == null) {
+            firebaseDatabase = FirebaseDatabase.getInstance();
+            firebaseDatabaseReference = firebaseDatabase.getReference();
+            firebaseDatabaseReference.keepSynced(true);
+        }
 
         // Populate the recycler list view
         recyclerView = (RecyclerView) findViewById(R.id.list_recycle_parent);
