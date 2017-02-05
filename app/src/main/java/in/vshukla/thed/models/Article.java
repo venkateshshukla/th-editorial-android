@@ -1,9 +1,6 @@
 package in.vshukla.thed.models;
 
-import io.realm.RealmObject;
-import io.realm.annotations.Index;
-import io.realm.annotations.PrimaryKey;
-import io.realm.annotations.Required;
+import java.io.Serializable;
 
 /**
  * An article entity
@@ -11,43 +8,32 @@ import io.realm.annotations.Required;
  * Created by venkatesh on 28/11/16.
  */
 
-public class Article extends RealmObject {
+public class Article implements Serializable {
 
-    public static final String COL_KEY = "key";
-    public static final String COL_AUTHOR = "author";
-    public static final String COL_TITLE = "title";
-    public static final String COL_BODY = "body";
-    public static final String COL_KIND = "kind";
-    public static final String COL_DATE = "date";
-    public static final String COL_TIMESTAMP = "timestamp";
+    private String id;
 
-    @Required
-    @PrimaryKey
-    private String key;
+    private String author;
 
-    @Index
-    private String  author;
+    private String category;
 
-    @Required
-    @Index
+    private Long publishedDate;
+
+    private String snippet;
+
     private String title;
 
-    private String body;
+    private String description;
 
-    @Required
-    private String kind;
+    private Boolean articleUpdated;
 
-    @Required
-    private String date;
+    private String url;
 
-    private long timestamp;
-
-    public String getKey() {
-        return key;
+    public String getId() {
+        return id;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getAuthor() {
@@ -58,6 +44,30 @@ public class Article extends RealmObject {
         this.author = author;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public Long getPublishedDate() {
+        return publishedDate;
+    }
+
+    public void setPublishedDate(Long publishedDate) {
+        this.publishedDate = publishedDate;
+    }
+
+    public String getSnippet() {
+        return snippet;
+    }
+
+    public void setSnippet(String snippet) {
+        this.snippet = snippet;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -66,35 +76,27 @@ public class Article extends RealmObject {
         this.title = title;
     }
 
-    public String getBody() {
-        return body;
+    public String getDescription() {
+        return description;
     }
 
-    public void setBody(String body) {
-        this.body = body;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public String getKind() {
-        return kind;
+    public Boolean getArticleUpdated() {
+        return articleUpdated;
     }
 
-    public void setKind(String kind) {
-        this.kind = kind;
+    public void setArticleUpdated(Boolean articleUpdated) {
+        this.articleUpdated = articleUpdated;
     }
 
-    public String getDate() {
-        return date;
+    public String getUrl() {
+        return url;
     }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public long getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
+    public void setUrl(String url) {
+        this.url = url;
     }
 }
