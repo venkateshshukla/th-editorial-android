@@ -77,11 +77,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_kind"
-        android:paddingStart="@dimen/list_title_padding"
-        android:paddingLeft="@dimen/list_title_padding"
-        android:paddingRight="@dimen/list_title_padding"
-        android:paddingEnd="@dimen/list_title_padding"
-        android:layout_centerHorizontal="true" >
+        android:paddingStart="@dimen/reader_padding_start"
+        android:paddingLeft="@dimen/reader_padding_start"
+        android:paddingRight="@dimen/reader_padding_end"
+        android:paddingEnd="@dimen/reader_padding_end"
+        android:layout_centerHorizontal="true"
+        android:scrollbarStyle="insideInset" >
 
         <LinearLayout
             android:id="@+id/ll_article"
@@ -93,6 +94,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/sample_body"
+                android:letterSpacing="0.05"
+                android:lineSpacingExtra="1dp"
+                android:textColor="@color/black"
+                android:textIsSelectable="true"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
     </ScrollView>
