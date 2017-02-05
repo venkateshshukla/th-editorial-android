@@ -9,8 +9,8 @@ android {
         applicationId "in.vshukla.thed"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 3
-        versionName "1.1.1"
+        versionCode 4
+        versionName "1.1.2"
     }
 
     buildTypes {
