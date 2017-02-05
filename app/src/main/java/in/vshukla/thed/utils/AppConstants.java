@@ -7,7 +7,6 @@ package in.vshukla.thed.utils;
  */
 
 public interface AppConstants {
-    String SERVER_BASEURL = "http://th-opinion.appspot.com/api/";
     String REC_DATE_FMT_1 = "yyyy-MM-dd HH:mm:ss.S";
     String REC_DATE_FMT_2 = "EEE, d MMM yyyy HH:mm:ss Z";
     long MILLIS_IN_MINUTE = 1000L * 60;
