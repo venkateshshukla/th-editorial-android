@@ -2,7 +2,6 @@ package in.vshukla.thed.activities;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,8 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.ChildEventListener;
@@ -21,6 +18,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import hugo.weaving.DebugLog;
 import in.vshukla.thed.R;
 import in.vshukla.thed.models.Article;
+import in.vshukla.thed.models.ArticleViewHolder;
 import in.vshukla.thed.utils.AppConstants;
 
 import static in.vshukla.thed.utils.AppUtils.getDateDiffString;
@@ -38,31 +36,6 @@ public class MainActivity extends Activity {
     private DatabaseReference firebaseDatabaseReference;
     private FirebaseRecyclerAdapter<Article, ArticleViewHolder> firebaseAdapter;
     private ChildEventListener childEventListener;
-
-    static class ArticleViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView tvDate, tvKind, tvTitle, tvAuthor, tvKey;
-        Article article;
-        Context context;
-
-        ArticleViewHolder(View itemView) {
-            super(itemView);
-            tvAuthor = (TextView) itemView.findViewById(R.id.tv_list_author);
-            tvDate = (TextView) itemView.findViewById(R.id.tv_list_date);
-            tvKind = (TextView) itemView.findViewById(R.id.tv_list_kind);
-            tvKey = (TextView) itemView.findViewById(R.id.tv_list_key);
-            tvTitle = (TextView) itemView.findViewById(R.id.tv_list_title);
-            itemView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            Intent readerActivityIntent = new Intent(context, ReaderActivity.class);
-            Bundle extras = new Bundle();
-            extras.putSerializable(AppConstants.EXTRAS_ARTICLE, article);
-            readerActivityIntent.putExtras(extras);
-            context.startActivity(readerActivityIntent);
-        }
-    }
 
     @Override
     @DebugLog
