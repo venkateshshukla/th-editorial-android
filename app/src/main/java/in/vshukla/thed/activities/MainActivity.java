@@ -78,6 +78,7 @@ public class MainActivity extends Activity {
         firebaseDatabase = FirebaseDatabase.getInstance();
         firebaseDatabase.setPersistenceEnabled(true);
         firebaseDatabaseReference = firebaseDatabase.getReference();
+        firebaseDatabaseReference.keepSynced(true);
 
         // Populate the recycler list view
         recyclerView = (RecyclerView) findViewById(R.id.list_recycle_parent);
@@ -133,6 +134,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        firebaseAdapter.cleanup();
     }
 
     @Override
