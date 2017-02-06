@@ -38,3 +38,5 @@ proguard/
 google-services.json
 .idea/
 *.iml
+
+keystore.properties
