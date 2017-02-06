@@ -11,7 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -35,7 +35,9 @@ public class MainActivity extends Activity {
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference firebaseDatabaseReference;
     private FirebaseRecyclerAdapter<Article, ArticleViewHolder> firebaseAdapter;
-    private ChildEventListener childEventListener;
+
+    private FirebaseAnalytics firebaseAnalytics;
+
 
     @Override
     @DebugLog
@@ -46,6 +48,9 @@ public class MainActivity extends Activity {
 
         // Initialise the shared preferences
         prefs = getSharedPreferences(getString(R.string.pref_file_key), Context.MODE_PRIVATE);
+
+        // Initialize firebase analytics
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         // Initialize firebase database
         if (firebaseDatabase == null) {
@@ -66,7 +71,7 @@ public class MainActivity extends Activity {
                 Article.class,
                 R.layout.article_list_item,
                 ArticleViewHolder.class,
-                firebaseDatabaseReference.child(AppConstants.DB_FEED_NEWSFEED)
+                firebaseDatabaseReference.child(AppConstants.DB_FEED_NEWSFEED).orderByChild(AppConstants.DB_COL_PUBLISHED_DATE)
         ) {
             @DebugLog
             @Override
@@ -101,8 +106,6 @@ public class MainActivity extends Activity {
         linearLayoutManager.setReverseLayout(true);
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
-
-        //recyclerView.setHasFixedSize(true);
     }
 
     @Override

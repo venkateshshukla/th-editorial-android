@@ -15,5 +15,6 @@ public interface AppConstants {
     long MILLIS_IN_WEEK = MILLIS_IN_DAY * 7;
     String EMPTY_STR = "";
     String DB_FEED_NEWSFEED = "api/v1/newsfeeds";
+    String DB_COL_PUBLISHED_DATE = "publishedDate";
     String EXTRAS_ARTICLE = "extras_article";
 }

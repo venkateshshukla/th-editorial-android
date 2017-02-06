@@ -9,6 +9,8 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import hugo.weaving.DebugLog;
 import in.vshukla.thed.R;
 import in.vshukla.thed.models.Article;
@@ -21,6 +23,8 @@ public class ReaderActivity extends Activity {
 
     private TextView tvTitle, tvDate, tvAuthor, tvKind, tvBody;
 
+    private FirebaseAnalytics firebaseAnalytics;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +34,10 @@ public class ReaderActivity extends Activity {
             supportActionBar.setDisplayHomeAsUpEnabled(true);
         }
         initializeViews();
+
+        // Initialize firebase analytics
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
@@ -48,8 +56,17 @@ public class ReaderActivity extends Activity {
             return;
         }
         Log.d(TAG, "Received article {}" + article);
-
         setArticleBody(article);
+        analyticsLogArticle(article);
+    }
+
+    @DebugLog
+    private void analyticsLogArticle(Article article) {
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, article.getId());
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, article.getTitle());
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "article");
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
     }
 
     @DebugLog
